@@ -219,17 +219,17 @@ stages:
         Write-Host "##vso[task.prependpath]C:\cmake\bin"
       displayName: 'Install'
     - script: |
-        mkdir build.cxx%CXXSTD%
-        cd build.cxx%CXXSTD%
+        mkdir build.cxx%CXXSTD%.arch%ARCH%
+        cd build.cxx%CXXSTD%.arch%ARCH%
         cmake --version
         cmake -DCMAKE_CXX_STANDARD=%CXXSTD% -DBUILD_SHARED_LIBS=ON -A %ARCH% ..
       displayName: 'CMake'
     - script: |
-        cd build.cxx%CXXSTD%
+        cd build.cxx%CXXSTD%.arch%ARCH%
         cmake --build . --config %BUILD_TYPE%
       displayName: 'Build'
     - script: |
-        cd build.cxx%CXXSTD%
+        cd build.cxx%CXXSTD%.arch%ARCH%
         ctest -V --output-on-failure -C %BUILD_TYPE%
       displayName: 'Test'
       condition: and(succeeded(), eq(variables['ARCH'], 'x64'))
