@@ -232,7 +232,7 @@ stages:
         cd build.cxx%CXXSTD%
         ctest -V --output-on-failure -C %BUILD_TYPE%
       displayName: 'Test'
-      condition: and(succeeded(), eq(%ARCH%, 'x64'))
+      condition: and(succeeded(), eq(variables['ARCH'], 'x64'))
 
   - job: 'macOS'
     pool:
