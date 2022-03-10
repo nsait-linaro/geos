@@ -197,10 +197,17 @@ stages:
         #   TOOLSET: msvc-14.3
         #   CXXSTD: 20
         #   VM_IMAGE: 'windows-2022'
-        VS 2019 C++20:
+        VS 2019 C++20 x64:
           TOOLSET: msvc-14.2
           CXXSTD: 20
           VM_IMAGE: 'windows-2019'
+          ARCH: x64
+        VS 2019 C++20 ARM64:
+          TOOLSET: msvc-14.2
+          CXXSTD: 20
+          VM_IMAGE: 'windows-2019'
+          ARCH: ARM64
+
     pool:
       vmImage: $(VM_IMAGE)
     steps:
@@ -215,7 +222,7 @@ stages:
         mkdir build.cxx%CXXSTD%
         cd build.cxx%CXXSTD%
         cmake --version
-        cmake -DCMAKE_CXX_STANDARD=%CXXSTD% -DBUILD_SHARED_LIBS=ON ..
+        cmake -DCMAKE_CXX_STANDARD=%CXXSTD% -DBUILD_SHARED_LIBS=ON -A %ARCH% ..
       displayName: 'CMake'
     - script: |
         cd build.cxx%CXXSTD%
@@ -225,6 +232,7 @@ stages:
         cd build.cxx%CXXSTD%
         ctest -V --output-on-failure -C %BUILD_TYPE%
       displayName: 'Test'
+      condition: and(succeeded(), eq(%ARCH%, 'x64'))
 
   - job: 'macOS'
     pool:
